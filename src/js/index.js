@@ -6,16 +6,6 @@ import '@pnotify/core/dist/BrightTheme.css';
 import { alert, error, defaults, Stack } from '@pnotify/core/dist/PNotify';
 import '@pnotify/core/dist/PNotify.css';
 import 'material-design-icons/iconfont/material-icons.css';
-const myStack = new Stack({
-  dir1: 'down',
-  dir2: 'left',
-  firstpos1: 200,
-  firstpos2: 560,
-  spacing1: 36,
-  spacing2: 36,
-  push: 'bottom',
-  context: document.body,
-});
 
 const refs = {
   searchForm: document.querySelector('#search_form'),
@@ -33,6 +23,8 @@ function searchFormSubmitHandler(e) {
 
   const inputValue = e.target.value;
   countryService.searchQuery = inputValue;
+  e.target.value = '';
+
   countryService.fetchCountry().then(data => {
     if (data.length < 2) {
       buildCardCountry(data);
@@ -40,17 +32,15 @@ function searchFormSubmitHandler(e) {
       buildCardCountryList(data);
     } else if (data.length > 10) {
       alert({
-        text: 'Too many matches found. Please enter a more specific query.',
+        text: 'Too many matches found. Please enter a more specific query!',
         maxTextHeight: null,
         width: '400px;',
-        stack: myStack,
       });
     } else
       error({
         text: 'No such country found.',
         maxTextHeight: null,
         width: '400px;',
-        stack: myStack,
       });
   });
 }
