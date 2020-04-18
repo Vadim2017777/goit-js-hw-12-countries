@@ -1,0 +1,72 @@
+import '../styles/styles.css';
+import _ from 'lodash';
+import countriesTemplate from '../templates/countries-card-template.hbs';
+import countryService from './services/search_country_service.js';
+import '@pnotify/core/dist/BrightTheme.css';
+import { alert, error, defaults, Stack } from '@pnotify/core/dist/PNotify';
+import '@pnotify/core/dist/PNotify.css';
+import 'material-design-icons/iconfont/material-icons.css';
+const myStack = new Stack({
+  dir1: 'down',
+  dir2: 'left',
+  firstpos1: 200,
+  firstpos2: 560,
+  spacing1: 36,
+  spacing2: 36,
+  push: 'bottom',
+  context: document.body,
+});
+
+const refs = {
+  searchForm: document.querySelector('#search_form'),
+  card: document.querySelector('.js-card'),
+};
+
+refs.searchForm.addEventListener(
+  'input',
+  _.debounce(searchFormSubmitHandler, 1500),
+);
+
+function searchFormSubmitHandler(e) {
+  e.preventDefault();
+  clearMarkup();
+
+  const inputValue = e.target.value;
+  countryService.searchQuery = inputValue;
+  countryService.fetchCountry().then(data => {
+    if (data.length < 2) {
+      buildCardCountry(data);
+    } else if ((data.length > 2) & (data.length < 10)) {
+      buildCardCountryList(data);
+    } else if (data.length > 10) {
+      alert({
+        text: 'Too many matches found. Please enter a more specific query.',
+        maxTextHeight: null,
+        width: '400px;',
+        stack: myStack,
+      });
+    } else
+      error({
+        text: 'No such country found.',
+        maxTextHeight: null,
+        width: '400px;',
+        stack: myStack,
+      });
+  });
+}
+
+function buildCardCountry(item) {
+  const markup = countriesTemplate(item);
+
+  refs.card.insertAdjacentHTML('beforeend', markup);
+}
+
+function buildCardCountryList(items) {
+  const markup = items.map(item =>
+    refs.card.insertAdjacentHTML('beforeend', `<li>${item.name}</li>`),
+  );
+}
+
+function clearMarkup() {
+  refs.card.innerHTML = ' ';
+}
