@@ -25,24 +25,27 @@ function searchFormSubmitHandler(e) {
   countryService.searchQuery = inputValue;
   e.target.value = '';
 
-  countryService.fetchCountry().then(data => {
-    if (data.length < 2) {
-      buildCardCountry(data);
-    } else if ((data.length > 2) & (data.length < 10)) {
-      buildCardCountryList(data);
-    } else if (data.length > 10) {
-      alert({
-        text: 'Too many matches found. Please enter a more specific query!',
-        maxTextHeight: null,
-        width: '400px;',
-      });
-    } else
-      error({
-        text: 'No such country found.',
-        maxTextHeight: null,
-        width: '400px;',
-      });
-  });
+  countryService
+    .fetchCountry()
+    .then(data => {
+      if (data.length < 2) {
+        buildCardCountry(data);
+      } else if ((data.length > 2) & (data.length < 10)) {
+        buildCardCountryList(data);
+      } else if (data.length > 10) {
+        alert({
+          text: 'Too many matches found. Please enter a more specific query!',
+          maxTextHeight: null,
+          width: '400px;',
+        });
+      } else
+        error({
+          text: 'No such country found.',
+          maxTextHeight: null,
+          width: '400px;',
+        });
+    })
+    .catch(error => console.log(error));
 }
 
 function buildCardCountry(item) {
