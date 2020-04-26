@@ -43,7 +43,7 @@ function buildListItemsMarkup(items) {
 }
 
 function clearMarkup() {
-  refs.gallery.innerHTML = ' ';
+  refs.gallery.innerHTML = '';
 }
 
 function Scroll(position) {
