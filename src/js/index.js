@@ -22,11 +22,8 @@ function searchFormSubmitHandler(e) {
   clearMarkup();
 
   const inputValue = e.target.value;
-  countryService.searchQuery = inputValue;
-  e.target.value = '';
 
-  countryService
-    .fetchCountry()
+  countryService(inputValue)
     .then(data => {
       if (data.length < 2) {
         buildCardCountry(data);
@@ -50,6 +47,7 @@ function searchFormSubmitHandler(e) {
         });
     })
     .catch(error => console.log(error));
+  e.target.value = '';
 }
 
 function buildCardCountry(items) {
