@@ -20,9 +20,7 @@ refs.searchForm.addEventListener(
 function searchFormSubmitHandler(e) {
   e.preventDefault();
   clearMarkup();
-
   const inputValue = e.target.value;
-
   countryService(inputValue)
     .then(data => {
       if (data.length < 2) {
