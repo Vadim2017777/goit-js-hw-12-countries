@@ -3,7 +3,7 @@ import _ from 'lodash';
 import countriesTemplate from '../templates/countries-card-template.hbs';
 import countryService from './services/search_country_service.js';
 import '@pnotify/core/dist/BrightTheme.css';
-import { alert, error, defaults, Stack } from '@pnotify/core/dist/PNotify';
+import { alert, error } from '@pnotify/core/dist/PNotify';
 import '@pnotify/core/dist/PNotify.css';
 import 'material-design-icons/iconfont/material-icons.css';
 
@@ -14,7 +14,7 @@ const refs = {
 
 refs.searchForm.addEventListener(
   'input',
-  _.debounce(searchFormSubmitHandler, 1500),
+  _.debounce(searchFormSubmitHandler, 1000),
 );
 
 function searchFormSubmitHandler(e) {
@@ -37,20 +37,23 @@ function searchFormSubmitHandler(e) {
           text: 'Too many matches found. Please enter a more specific query!',
           maxTextHeight: null,
           width: '400px;',
+          sticker: false,
+          delay: 1000,
         });
       } else
         error({
           text: 'No such country found.',
           maxTextHeight: null,
           width: '400px;',
+          sticker: false,
+          delay: 1000,
         });
     })
     .catch(error => console.log(error));
 }
 
-function buildCardCountry(item) {
-  const markup = countriesTemplate(item);
-
+function buildCardCountry(items) {
+  const markup = items.map(item => countriesTemplate(item)).join('');
   refs.card.insertAdjacentHTML('beforeend', markup);
 }
 
